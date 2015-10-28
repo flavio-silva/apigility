@@ -5,6 +5,7 @@ namespace CodeOrders\V1\Rest\Users;
 
 use Zend\Db\TableGateway\TableGatewayInterface;
 use Zend\Paginator\Adapter\DbTableGateway;
+use Zend\Stdlib\Hydrator\ObjectProperty as Hydrator;
 
 class UsersRepository
 {
@@ -36,6 +37,12 @@ class UsersRepository
     
     public function insert($data)
     {
-        return $this->tableGateway->insert($data);
+        $hydrator = new Hydrator();        
+        return $this->tableGateway->insert($hydrator->extract($data));
+    }
+    
+    public function update($id, $data)
+    {
+        return $this->tableGateway->update($data, ['id' => $id]);
     }
 }
