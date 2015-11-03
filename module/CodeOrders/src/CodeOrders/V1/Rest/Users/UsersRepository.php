@@ -37,12 +37,13 @@ class UsersRepository
     
     public function insert($data)
     {
-        $hydrator = new Hydrator();        
+        $hydrator = new Hydrator();
         return $this->tableGateway->insert($hydrator->extract($data));
     }
     
     public function update($id, $data)
     {
-        return $this->tableGateway->update($data, ['id' => $id]);
+        $hydrator = new Hydrator();
+        return $this->tableGateway->update($hydrator->extract($data), ['id' => $id]);
     }
 }

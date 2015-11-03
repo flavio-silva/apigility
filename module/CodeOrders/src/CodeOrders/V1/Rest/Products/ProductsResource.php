@@ -1,26 +1,29 @@
 <?php
-namespace CodeOrders\V1\Rest\Users;
+namespace CodeOrders\V1\Rest\Products;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 
-class UsersResource extends AbstractResourceListener
+class ProductsResource extends AbstractResourceListener
 {
-    private $usersRepository;
     
-    public function __construct(UsersRepository $usersRepository)
+    private $productsRepository;
+    
+    public function __construct(ProductsRepository $productsRepository)
     {
-        $this->usersRepository = $usersRepository;
-    }    
-   
+        $this->productsRepository = $productsRepository;
+    }
+    
+    
     public function create($data)
     {
-        return $this->usersRepository->insert($data);
+        return $this->productsRepository->insert($data);
     }
-   
+
+    
     public function delete($id)
     {
-        return $this->usersRepository->delete($id);
+        return $this->productsRepository->delete($id);
     }
 
     /**
@@ -33,15 +36,16 @@ class UsersResource extends AbstractResourceListener
     {
         return new ApiProblem(405, 'The DELETE method has not been defined for collections');
     }
+
   
     public function fetch($id)
     {
-        return $this->usersRepository->find($id);
+        return $this->productsRepository->find($id);
     }
    
     public function fetchAll($params = array())
     {
-        return $this->usersRepository->findAll();
+        return $this->productsRepository->findAll();
     }
 
     /**
@@ -66,9 +70,10 @@ class UsersResource extends AbstractResourceListener
     {
         return new ApiProblem(405, 'The PUT method has not been defined for collections');
     }
-   
+
+    
     public function update($id, $data)
     {
-        return $this->usersRepository->update($id, $data);
+        return $this->productsRepository->update($id, $data);
     }
 }
