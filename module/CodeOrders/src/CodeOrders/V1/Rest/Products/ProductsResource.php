@@ -23,7 +23,8 @@ class ProductsResource extends AbstractResourceListener
     
     public function delete($id)
     {
-        return $this->productsRepository->delete($id);
+        $this->productsRepository->delete($id);
+        return true;
     }
 
     /**

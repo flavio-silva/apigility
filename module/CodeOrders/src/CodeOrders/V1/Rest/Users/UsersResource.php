@@ -19,8 +19,9 @@ class UsersResource extends AbstractResourceListener
     }
    
     public function delete($id)
-    {
-        return $this->usersRepository->delete($id);
+    {        
+        $this->usersRepository->delete($id);
+        return true;
     }
 
     /**
