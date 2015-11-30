@@ -3,11 +3,25 @@ namespace CodeOrders\V1\Rest\Products;
 
 use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ProductsResource extends AbstractResourceListener
+class ProductsResource extends AbstractResourceListener implements ServiceLocatorAwareInterface
 {
+    use \CodeOrders\V1\Rest\VerifyPermission;
     
     private $productsRepository;
+    private $serviceLocator;
+    
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
     
     public function __construct(ProductsRepository $productsRepository)
     {
@@ -17,14 +31,22 @@ class ProductsResource extends AbstractResourceListener
     
     public function create($data)
     {
-        return $this->productsRepository->insert($data);
+        if ($this->hasPermission('admin')) {
+            return $this->productsRepository->insert($data);
+        }
+        
+        return new ApiProblem(403, 'Only admin has access to this resource');
     }
 
     
     public function delete($id)
     {
-        $this->productsRepository->delete($id);
-        return true;
+        if ($this->hasPermission('admin')) {
+            $this->productsRepository->delete($id);
+            return true;
+        }
+        
+        return new ApiProblem(403, 'Only admin has access to this resource');
     }
 
     /**
@@ -41,12 +63,20 @@ class ProductsResource extends AbstractResourceListener
   
     public function fetch($id)
     {
-        return $this->productsRepository->find($id);
+        if ($this->hasPermission('admin') || $this->hasPermission('salesman')) {
+            return $this->productsRepository->find($id);
+        }
+        
+        return new ApiProblem(403, 'Only administrator or salesman has access to this resource');
     }
    
     public function fetchAll($params = array())
     {
-        return $this->productsRepository->findAll();
+        if ($this->hasPermission('admin') || $this->hasPermission('salesman')) {
+            return $this->productsRepository->findAll();
+        }
+        
+        return new ApiProblem(403, 'Only administrator or salesman has access to this resource');
     }
 
     /**
@@ -75,6 +105,10 @@ class ProductsResource extends AbstractResourceListener
     
     public function update($id, $data)
     {
-        return $this->productsRepository->update($id, $data);
+        if ($this->hasPermission('admin')) {            
+            return $this->productsRepository->update($id, $data);
+        }
+        
+        return new ApiProblem(403, 'Only admin has access to this resource');
     }
 }
