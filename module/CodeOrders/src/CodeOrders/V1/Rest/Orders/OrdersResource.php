@@ -35,6 +35,7 @@ class OrdersResource extends AbstractResourceListener implements ServiceLocatorA
         }
 
         try {
+            $data->user_id = $this->getAuthenticatedUser()->getId();
             $result = $this->ordersService->insert($data);
            return $result;
             
@@ -119,6 +120,8 @@ class OrdersResource extends AbstractResourceListener implements ServiceLocatorA
     public function update($id, $data)
     {
         if ($this->hasPermission('admin')) {
+
+            $data->user_id = $this->getAuthenticatedUser()->getId();
             return $this->ordersService->update($id, $data);
         }
         
