@@ -46,12 +46,8 @@ class OrdersResource extends AbstractResourceListener implements ServiceLocatorA
     }
     
     public function delete($id)
-    {
-        if ($this->hasPermission('admin')) {
-            return $this->ordersService->delete($id);
-        }
-        
-        return new ApiProblem(403, 'Only admin can delete a resource');
+    {        
+        return $this->ordersService->delete($id);
     }
 
     /**
